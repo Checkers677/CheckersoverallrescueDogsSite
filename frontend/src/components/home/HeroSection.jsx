@@ -1,27 +1,22 @@
-// frontend/src/components/home/HeroSection.jsx
-
 "use client";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Icon } from "@/components/ui/Icon";
 import AnimatedCounter from "../ui/AnimatedCounter";
 import HeroDogPreviewCard from "./HeroDogPreviewCard";
 import { getStatistics } from "../../services/animalsService";
 import { reportError } from "../../utils/logger";
 
 /**
- * Hero section with animated statistics and call-to-action buttons
- * @param {Object} props - Component props
- * @param {Object} props.initialStatistics - Pre-fetched statistics data from SSR
+ * Hero section for Dogs of Hope Canada
+ * @param {Object} props
+ * @param {Object} props.initialStatistics - Pre-fetched statistics
  * @param {Array} props.previewDogs - Dogs to show in hero preview cards
- * @param {boolean} props.priority - Whether this section should load with priority
  */
 export default function HeroSection({
   initialStatistics = null,
   previewDogs = [],
-  priority = false,
 }) {
   const [statistics, setStatistics] = useState(initialStatistics);
   const [loading, setLoading] = useState(!initialStatistics);
@@ -42,123 +37,67 @@ export default function HeroSection({
   };
 
   useEffect(() => {
-    // Only fetch if we don't have initial data
     if (!initialStatistics) {
       fetchStatistics();
     }
   }, [initialStatistics]);
 
   return (
-    <section
-      data-testid="hero-section"
-      className="hero-gradient relative overflow-hidden py-12 md:py-20 lg:py-24"
-    >
-      <div
-        data-testid="hero-container"
-        className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
-      >
-        <div
-          data-testid="hero-content"
-          className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20"
-        >
+    <section className="hero-gradient relative overflow-hidden py-12 md:py-20 lg:py-24">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
           {/* Left Column - Hero Text and CTA */}
           <div className="flex-1 text-center lg:text-left">
-            <h1
-              data-testid="hero-title"
-              className="text-hero font-bold text-foreground mb-6 leading-tight"
-            >
-              Find Your Perfect Rescue Dog
+            <h1 className="text-hero font-bold text-foreground mb-6 leading-tight">
+              Hope for Every Paw 🐾
             </h1>
-            <p
-              data-testid="hero-subtitle"
-              className="text-body text-muted-foreground mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed"
-            >
-              Browse {statistics?.total_dogs?.toLocaleString() || "3,186"} dogs
-              aggregated from {statistics?.total_organizations || "13"} rescue
-              organizations across Europe & UK. Adopt Don't Shop.
+            <p className="text-body text-muted-foreground mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+              Rescue, heal, and rehome dogs across Canada 🇨🇦. Join us at Dogs of
+              Hope Canada and give a dog a forever home.
             </p>
 
-            {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <Link href="/dogs">
+              <Link href="/donate">
                 <Button
-                  data-testid="hero-primary-cta"
                   size="lg"
                   className="w-full sm:w-auto bg-orange-600 hover:bg-orange-700 text-white px-8 py-3"
-                  style={{ minWidth: "48px", minHeight: "48px" }}
                 >
-                  Browse All Dogs
+                  Donate Now
                 </Button>
               </Link>
-              <Link href="/swipe">
+              <Link href="/gallery">
                 <Button
-                  data-testid="hero-secondary-cta"
                   size="lg"
-                  className="w-full sm:w-auto bg-white dark:bg-gray-800 text-orange-600 dark:text-orange-400 border-2 border-orange-600 dark:border-orange-500 hover:bg-orange-50 dark:hover:bg-gray-700 font-bold px-8 py-3 transition-colors"
-                  style={{ minWidth: "48px", minHeight: "48px" }}
+                  className="w-full sm:w-auto bg-white dark:bg-gray-800 text-orange-600 border-2 border-orange-600 hover:bg-orange-50 font-bold px-8 py-3"
                 >
-                  <span className="mr-2 text-xl" aria-label="Paw icon">
-                    🐾
-                  </span>
-                  Start Swiping
+                  View Dogs
                 </Button>
               </Link>
             </div>
           </div>
 
-          {/* Right Column - Statistics */}
+          {/* Right Column - Statistics & Preview Dogs */}
           <div className="flex-1 w-full max-w-lg">
             {loading && (
-              <div data-testid="statistics-loading" className="space-y-6">
-                <div
-                  data-testid="stat-loading"
-                  className="bg-card/50 dark:bg-gray-800/70 backdrop-blur-sm rounded-lg p-6 animate-shimmer"
-                >
-                  <div className="h-12 bg-gradient-to-r from-muted to-muted/80 rounded mb-2"></div>
-                  <div className="h-4 bg-gradient-to-r from-muted to-muted/80 rounded w-3/4"></div>
-                </div>
-                <div
-                  data-testid="stat-loading"
-                  className="bg-card/50 dark:bg-gray-800/70 backdrop-blur-sm rounded-lg p-6 animate-shimmer"
-                >
-                  <div className="h-12 bg-gradient-to-r from-muted to-muted/80 rounded mb-2"></div>
-                  <div className="h-4 bg-gradient-to-r from-muted to-muted/80 rounded w-3/4"></div>
-                </div>
-                <div
-                  data-testid="stat-loading"
-                  className="bg-card/50 dark:bg-gray-800/70 backdrop-blur-sm rounded-lg p-6 animate-shimmer"
-                >
-                  <div className="h-12 bg-gradient-to-r from-muted to-muted/80 rounded mb-2"></div>
-                  <div className="h-4 bg-gradient-to-r from-muted to-muted/80 rounded w-3/4"></div>
-                </div>
+              <div className="space-y-6">
+                <div className="bg-card/50 dark:bg-gray-800/70 backdrop-blur-sm rounded-lg p-6 animate-shimmer h-40"></div>
               </div>
             )}
 
             {error && (
-              <div
-                data-testid="statistics-error"
-                className="bg-card/80 dark:bg-gray-800/90 backdrop-blur-sm rounded-lg p-6 text-center"
-              >
+              <div className="bg-card/80 dark:bg-gray-800/90 backdrop-blur-sm rounded-lg p-6 text-center">
                 <div className="text-muted-foreground mb-4">{error}</div>
-                <Button
-                  data-testid="retry-button"
-                  onClick={fetchStatistics}
-                  variant="outline"
-                  size="sm"
-                >
+                <Button onClick={fetchStatistics} variant="outline" size="sm">
                   Try again
                 </Button>
               </div>
             )}
 
             {statistics && !loading && !error && (
-              <div data-testid="statistics-content" className="space-y-6">
-                <div
-                  data-testid="statistics-grid"
-                  className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"
-                >
-                  {/* Dogs Count */}
-                  <div className="bg-card/80 dark:bg-gray-800/90 backdrop-blur-sm rounded-lg p-6 text-center shadow-sm dark:shadow-purple-500/10">
+              <div className="space-y-6">
+                {/* Statistics Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                  <div className="bg-card/80 dark:bg-gray-800/90 backdrop-blur-sm rounded-lg p-6 text-center shadow-sm">
                     <div className="text-3xl md:text-4xl font-bold text-orange-600 mb-2">
                       <AnimatedCounter
                         value={statistics.total_dogs}
@@ -171,38 +110,34 @@ export default function HeroSection({
                     </div>
                   </div>
 
-                  {/* Organizations Count */}
-                  <div className="bg-card/80 dark:bg-gray-800/90 backdrop-blur-sm rounded-lg p-6 text-center shadow-sm dark:shadow-purple-500/10">
+                  <div className="bg-card/80 dark:bg-gray-800/90 backdrop-blur-sm rounded-lg p-6 text-center shadow-sm">
                     <div className="text-3xl md:text-4xl font-bold text-orange-600 mb-2">
                       <AnimatedCounter
                         value={statistics.total_organizations}
-                        label="Rescue organizations"
+                        label="Rescue Organizations"
                         className="block"
                       />
                     </div>
                     <div className="text-sm text-muted-foreground font-medium">
-                      Rescue organizations
+                      Rescue Organizations
                     </div>
                   </div>
 
-                  {/* Countries Count */}
-                  <Link href="/dogs/country" className="group">
-                    <div className="bg-card/80 dark:bg-gray-800/90 backdrop-blur-sm rounded-lg p-6 text-center shadow-sm dark:shadow-purple-500/10 hover:bg-orange-50 dark:hover:bg-orange-950/30 transition-colors cursor-pointer">
-                      <div className="text-3xl md:text-4xl font-bold text-orange-600 mb-2">
-                        <AnimatedCounter
-                          value={statistics.countries.length}
-                          label="Countries"
-                          className="block"
-                        />
-                      </div>
-                      <div className="text-sm text-muted-foreground font-medium group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">
-                        Countries
-                      </div>
+                  <div className="bg-card/80 dark:bg-gray-800/90 backdrop-blur-sm rounded-lg p-6 text-center shadow-sm hover:bg-orange-50 transition-colors cursor-pointer">
+                    <div className="text-3xl md:text-4xl font-bold text-orange-600 mb-2">
+                      <AnimatedCounter
+                        value={statistics.countries.length}
+                        label="Countries"
+                        className="block"
+                      />
                     </div>
-                  </Link>
+                    <div className="text-sm text-muted-foreground font-medium">
+                      Countries
+                    </div>
+                  </div>
                 </div>
 
-                {/* Dog Preview Cards - Floating Polaroids */}
+                {/* Dog Preview Cards */}
                 <div className="mt-4">
                   <div className="text-center mb-4">
                     <p className="text-sm text-muted-foreground font-medium">
@@ -224,21 +159,13 @@ export default function HeroSection({
                   ) : (
                     <div className="text-sm text-muted-foreground text-center py-4">
                       <Link
-                        href="/dogs"
+                        href="/gallery"
                         className="text-orange-600 hover:text-orange-700 hover:underline transition-colors"
                       >
                         Browse all dogs →
                       </Link>
                     </div>
                   )}
-                </div>
-
-                {/* Screen Reader Description */}
-                <div data-testid="statistics-description" className="sr-only">
-                  Current statistics about rescue dogs available for adoption:{" "}
-                  {statistics.total_dogs} dogs from{" "}
-                  {statistics.total_organizations} organizations across{" "}
-                  {statistics.countries.length} countries.
                 </div>
               </div>
             )}
